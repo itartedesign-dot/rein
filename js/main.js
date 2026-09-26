@@ -242,13 +242,14 @@
     idx = (i + slides.length) % slides.length;
     const im = $('#vImg'); im.src = slides[idx].src; im.alt = `${L(current.title)} — ${slides[idx].cap()}`;
     im.style.animation = 'none'; void im.offsetWidth; im.style.animation = '';
-    $('#vCap').textContent = `${slides[idx].cap()}  ·  ${t('tapZoom')} ⤢`;
+    $('#vCap').textContent = hasZoom ? `${slides[idx].cap()}  ·  ${t('tapZoom')} ⤢` : slides[idx].cap();
     $$('#vThumbs button').forEach((b, k) => b.setAttribute('aria-current', String(k === idx)));
     const th = $$('#vThumbs button')[idx]; if (th) th.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
   /* ---------- zoom: dita, rotella, doppio tocco ---------- */
   const Z = { s: 1, x: 0, y: 0, fit: 1, iw: 1, ih: 1, open: false };
-  const zArea = $('#zArea'), zImg = $('#zImg');
+  const zArea = $('#zArea') || document.createElement('div'), zImg = $('#zImg') || document.createElement('img');
+  const hasZoom = !!$('#zoom');
   function zClamp() {
     const W = zArea.clientWidth, H = zArea.clientHeight, w = Z.iw * Z.s, h = Z.ih * Z.s;
     Z.x = w <= W ? (W - w) / 2 : Math.min(0, Math.max(W - w, Z.x));
@@ -264,7 +265,7 @@
     Z.x = cx - (cx - Z.x) * (ns / Z.s); Z.y = cy - (cy - Z.y) * (ns / Z.s); Z.s = ns; zApply();
   }
   function openZoom() {
-    if (swiped) return;
+    if (swiped || !hasZoom) return;
     const src = slides[idx].src;
     Z.open = true; $('#zoom').hidden = false;
     $('#zHint').textContent = t('zoomHelp'); $('#zHint').classList.remove('off');
@@ -275,8 +276,9 @@
     if (zImg.complete && zImg.naturalWidth) zImg.onload();
     $('#zClose').focus();
   }
-  function closeZoom() { Z.open = false; $('#zoom').hidden = true; $('#vImg').focus?.(); }
+  function closeZoom() { Z.open = false; if (hasZoom) $('#zoom').hidden = true; $('#vImg').focus?.(); }
   $('#vImg').addEventListener('click', openZoom);
+  if (hasZoom) {
   $('#zClose').addEventListener('click', closeZoom);
   $('#zIn').addEventListener('click', () => zAt(1.6, zArea.clientWidth / 2, zArea.clientHeight / 2));
   $('#zOut').addEventListener('click', () => zAt(1 / 1.6, zArea.clientWidth / 2, zArea.clientHeight / 2));
@@ -315,6 +317,7 @@
   });
   const zUp = (e) => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (!ptrs.size) zArea.classList.remove('drag'); };
   zArea.addEventListener('pointerup', zUp); zArea.addEventListener('pointercancel', zUp);
+  }
   window.addEventListener('resize', () => { if (Z.open) zFit(); });
 
   function closeViewer() { $('#viewer').hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
@@ -444,6 +447,7 @@
   /* ---------- evoluzione di un'opera ---------- */
   let evoI = 0, evoTimer = null, evoUser = false;
   function renderEvo() {
+    if (!$('#evoLine')) return;
     const E = T[lang].evo;
     const line = $('#evoLine');
     $$('button', line).forEach((b) => b.remove());
@@ -460,6 +464,7 @@
     setEvo(evoI, true);
   }
   function setEvo(i, silent) {
+    if (!$('#evoStage')) return;
     const E = T[lang].evo; evoI = i;
     $$('#evoStage img').forEach((im, k) => im.classList.toggle('on', k === i));
     $$('#evoLine button').forEach((b, k) => b.setAttribute('aria-selected', String(k === i)));
@@ -471,7 +476,7 @@
   }
   function stopEvo() { clearInterval(evoTimer); evoTimer = null; }
   function startEvo() { if (evoUser || evoTimer) return; evoTimer = setInterval(() => setEvo((evoI + 1) % 6, true), 3200); }
-  new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? startEvo() : stopEvo())), { threshold: 0.35 }).observe($('#evoStage'));
+  if ($('#evoStage')) new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? startEvo() : stopEvo())), { threshold: 0.35 }).observe($('#evoStage'));
 
   /* ---------- contatti ---------- */
   function fillWorkSelect() {
@@ -479,6 +484,7 @@
     s.innerHTML = `<option value="">${esc(t('workAny'))}</option>` + WORKS.map((w) => `<option value="${esc(w.title.it)}">${esc(L(w.title))}</option>`).join('');
     s.value = v;
   }
+  $('#contactForm').setAttribute('novalidate', '');
   $('#contactForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const f = e.target, err = $('#cErr'), ok = $('#cOk'), btn = $('#cSend');
