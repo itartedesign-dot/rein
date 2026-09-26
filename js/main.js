@@ -242,11 +242,42 @@
     idx = (i + slides.length) % slides.length;
     const im = $('#vImg'); im.src = slides[idx].src; im.alt = `${L(current.title)} — ${slides[idx].cap()}`;
     im.style.animation = 'none'; void im.offsetWidth; im.style.animation = '';
-    $('#vCap').textContent = hasZoom ? `${slides[idx].cap()}  ·  ${t('tapZoom')} ⤢` : slides[idx].cap();
+    $('#vCap').textContent = slides[idx].cap();
+    if ($('#vZoomTxt')) $('#vZoomTxt').textContent = t('tapZoom');
     $$('#vThumbs button').forEach((b, k) => b.setAttribute('aria-current', String(k === idx)));
     const th = $$('#vThumbs button')[idx]; if (th) th.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
   /* ---------- zoom: dita, rotella, doppio tocco ---------- */
+  /* lo zoom si costruisce da solo: funziona qualunque versione di index.html e style.css sia online */
+  if (!$('#zoom')) {
+    document.body.insertAdjacentHTML('beforeend', `<div class="zoom" id="zoom" hidden role="dialog" aria-modal="true" aria-label="Zoom">
+      <div class="z-area" id="zArea"><img id="zImg" alt="" draggable="false"></div>
+      <button class="z-close" id="zClose" aria-label="Chiudi / Close">✕</button>
+      <div class="z-bar"><button id="zOut" aria-label="−">−</button><button id="zFit" aria-label="1:1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button><button id="zIn" aria-label="+">+</button></div>
+      <p class="z-hint" id="zHint"></p></div>`);
+  }
+  if (!$('#zoom-css')) {
+    const st = document.createElement('style'); st.id = 'zoom-css';
+    st.textContent = `
+      .zoom{position:fixed;inset:0;z-index:9999;background:#000}
+      .zoom[hidden]{display:none!important}
+      .z-area{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+      .z-area img{position:absolute;left:0;top:0;max-width:none!important;max-height:none!important;transform-origin:0 0;-webkit-user-drag:none}
+      .z-close{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:18px;z-index:2;width:50px;height:50px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.6);color:#fff;font-size:1.2rem}
+      .z-bar{position:absolute;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2;display:flex;border:1px solid rgba(201,166,90,.45);background:rgba(0,0,0,.65)}
+      .z-bar button{width:52px;height:46px;border:0;background:none;color:#fff;font-size:1.4rem;display:grid;place-items:center}
+      .z-bar button+button{border-left:1px solid rgba(201,166,90,.25)}
+      .z-bar svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6}
+      .z-hint{position:absolute;left:0;right:0;bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:2;margin:0;text-align:center;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#E3C47E;pointer-events:none;transition:opacity .6s}
+      .z-hint.off{opacity:0}
+      .v-zoom{position:absolute;right:18px;bottom:18px;z-index:3;display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid rgba(201,166,90,.6);background:rgba(0,0,0,.6);color:#E3C47E;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}
+      .v-zoom svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+      .v-figure img{cursor:zoom-in}`;
+    document.head.appendChild(st);
+  }
+  if (!$('#vZoom')) {
+    $('#vStage').insertAdjacentHTML('beforeend', `<button class="v-zoom" id="vZoom" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6"/></svg><span id="vZoomTxt"></span></button>`);
+  }
   const Z = { s: 1, x: 0, y: 0, fit: 1, iw: 1, ih: 1, open: false };
   const zArea = $('#zArea') || document.createElement('div'), zImg = $('#zImg') || document.createElement('img');
   const hasZoom = !!$('#zoom');
@@ -278,6 +309,9 @@
   }
   function closeZoom() { Z.open = false; if (hasZoom) $('#zoom').hidden = true; $('#vImg').focus?.(); }
   $('#vImg').addEventListener('click', openZoom);
+  $('#vZoom').addEventListener('click', (e) => { e.stopPropagation(); openZoom(); });
+  $('#vZoom').addEventListener('pointerdown', (e) => e.stopPropagation());
+  $('#vZoom').addEventListener('pointerup', (e) => e.stopPropagation());
   if (hasZoom) {
   $('#zClose').addEventListener('click', closeZoom);
   $('#zIn').addEventListener('click', () => zAt(1.6, zArea.clientWidth / 2, zArea.clientHeight / 2));
