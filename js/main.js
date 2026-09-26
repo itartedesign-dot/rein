@@ -536,4 +536,14 @@
 
   applyLang();
   handleReturn();
+  /* link diretto a un'opera (es. da Pinterest): …/rein/#opera-turista apre subito la sua scheda */
+  function openFromHash() {
+    const m = location.hash.match(/^#opera-([\w-]+)$/);
+    if (!m || !byId(m[1]) || !$('#thanks').hidden) return;
+    const el = document.getElementById('opera-' + m[1]);
+    if (el) el.scrollIntoView({ block: 'center' });
+    openViewer(m[1]);
+  }
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
 })();
