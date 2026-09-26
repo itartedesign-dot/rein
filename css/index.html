@@ -262,7 +262,11 @@
           </span>
         </div>
       </div>
-      <form class="card-form" id="contactForm" novalidate>
+      <form class="card-form" id="contactForm" action="https://formsubmit.co/itartedesign@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="Messaggio dal sito Rein">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://itartedesign-dot.github.io/rein/#contatti">
         <div class="field"><label for="cName" data-i18n="fName">Nome</label><input id="cName" name="name" autocomplete="name" required></div>
         <div class="field"><label for="cEmail" data-i18n="fEmail">Email</label><input id="cEmail" name="email" type="email" autocomplete="email" required></div>
         <div class="field"><label for="cWork" data-i18n="fWork">Opera di interesse</label><select id="cWork" name="work"></select></div>
