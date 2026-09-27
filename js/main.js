@@ -19,6 +19,9 @@
         ['Fase 5', 'Colore finale', 'La pennellata si fa più densa e decisa: i fiori si accendono, la materia prende vita.'],
         ['Fase finale', "L'opera compiuta", "L'opera è compiuta: ogni dettaglio è un gesto irripetibile, ogni texture una firma d'artista."],
       ],
+      navWc: 'Acquerelli', wcEyebrow: 'Acquerello e matita su carta', wcTitle: 'Gli acquerelli',
+      wcLead: "Fogli unici dipinti ad acquerello e matita: il gesto più immediato, la trasparenza del colore, la carta che respira. Ogni foglio è un originale firmato.",
+      sSupport: 'Supporto', supPaper: 'Foglio di carta', supCanvas: 'Tela',
       navWorks: 'Opere', navArtist: "L'artista", navBuy: 'Acquisto e spedizione', navContact: 'Contatti',
       heroEyebrow: 'Rein · Quadri originali dipinti a mano in Sicilia',
       heroTitle: "Dove l'anima vulcanica della Sicilia incontra la luce dell'Impressionismo francese.",
@@ -41,10 +44,10 @@
       buyEyebrow: 'Acquisto e spedizione', buyTitle: 'Dalla mia Sicilia alla tua parete',
       b1t: 'Originale unico', b1: "Ogni opera è un pezzo unico, dipinto a mano e firmato dall'artista. Non esistono copie.",
       b2t: 'Spedizione in tutto il mondo', b2: 'Spediamo ovunque nel mondo. Costo della spedizione: 100 € per opera.',
-      b3t: 'Box a prova di rottura', b3: "Ogni tela viaggia protetta in un box rinforzato a prova di rottura, pensato per arrivare intatta.",
+      b3t: 'Box a prova di rottura', b3: "Ogni opera, tela o foglio, viaggia protetta in un box rinforzato a prova di rottura, pensato per arrivare intatta.",
       b4t: 'Partenza entro 2 settimane', b4: "L'opera viene spedita entro 2 settimane dalla conferma del pagamento.",
       b5t: 'Pagamento sicuro', b5: "Paghi con PayPal all'indirizzo ufficiale dell'artista: i tuoi dati di pagamento restano protetti.",
-      b6t: 'Senza cornice', b6: 'Le opere sono vendute solo su tela, senza cornice: pronte da incorniciare secondo il tuo gusto.',
+      b6t: 'Senza cornice', b6: 'Tele e acquerelli su carta sono venduti senza cornice: pronti da incorniciare secondo il tuo gusto.',
       dutyNote: "Per spedizioni fuori dall'Unione Europea, eventuali dazi e tasse doganali del Paese di destinazione sono a carico dell'acquirente.",
       contactEyebrow: 'Contatti', contactTitle: 'Scrivimi',
       contactLead: "Per informazioni su un'opera, una dedica, o semplicemente per parlare di pittura. Rispondo personalmente.",
@@ -87,6 +90,9 @@
         ['Phase 5', 'Final colour', 'The brushwork becomes denser and bolder: the blossoms light up, the paint comes alive.'],
         ['Final phase', 'The finished work', "The work is complete: every detail is an unrepeatable gesture, every texture an artist's signature."],
       ],
+      navWc: 'Watercolours', wcEyebrow: 'Watercolour and pencil on paper', wcTitle: 'The watercolours',
+      wcLead: 'Unique sheets painted in watercolour and pencil: the most immediate gesture, the transparency of colour, paper that breathes. Every sheet is a signed original.',
+      sSupport: 'Support', supPaper: 'Sheet of paper', supCanvas: 'Canvas',
       navWorks: 'Artworks', navArtist: 'The artist', navBuy: 'Purchase & shipping', navContact: 'Contact',
       heroEyebrow: 'Rein · Original hand-painted artworks from Sicily',
       heroTitle: 'Where the volcanic soul of Sicily meets the light of French Impressionism.',
@@ -109,10 +115,10 @@
       buyEyebrow: 'Purchase & shipping', buyTitle: 'From my Sicily to your wall',
       b1t: 'Unique original', b1: 'Every artwork is a one-of-a-kind piece, hand-painted and signed by the artist. There are no copies.',
       b2t: 'Worldwide shipping', b2: 'We ship anywhere in the world. Shipping cost: €100 per artwork.',
-      b3t: 'Break-proof box', b3: 'Every canvas travels in a reinforced, break-proof box designed to arrive intact.',
+      b3t: 'Break-proof box', b3: 'Every artwork, canvas or sheet, travels in a reinforced, break-proof box designed to arrive intact.',
       b4t: 'Ships within 2 weeks', b4: 'The artwork is shipped within 2 weeks of payment confirmation.',
       b5t: 'Secure payment', b5: "Pay with PayPal to the artist's official account: your payment details stay protected.",
-      b6t: 'Unframed', b6: 'Artworks are sold on canvas only, without a frame: ready to be framed to your taste.',
+      b6t: 'Unframed', b6: 'Canvases and watercolours on paper are sold unframed: ready to be framed to your taste.',
       dutyNote: 'For shipments outside the European Union, any customs duties and taxes of the destination country are paid by the buyer.',
       contactEyebrow: 'Contact', contactTitle: 'Write to me',
       contactLead: 'For information about an artwork, a dedication, or simply to talk about painting. I reply personally.',
@@ -149,7 +155,8 @@
   const L = (o) => (o ? o[lang] || o.it : '');
   const eur = (n) => (lang === 'it' ? `${n.toLocaleString('it-IT')} €` : `€${n.toLocaleString('en-GB')}`);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const sizeTxt = (w) => `${w.size[0]} × ${w.size[1]} cm`;
+  const sizeTxt = (w) => (w.sizeLabel ? L(w.sizeLabel) : `${w.size[0]} × ${w.size[1]} cm`);
+  const shipOf = (w) => (w.shipping != null ? w.shipping : SITE.shipping);
   const byId = (id) => WORKS.find((w) => w.id === id);
 
   function applyLang() {
@@ -174,8 +181,12 @@
 
   /* ---------- opere ---------- */
   function renderWorks() {
-    const box = $('#works');
-    box.innerHTML = WORKS.map((w) => {
+    renderGrid($('#works'), WORKS.filter((w) => w.kind !== 'paper'));
+    const pb = $('#paperWorks');
+    if (pb) renderGrid(pb, WORKS.filter((w) => w.kind === 'paper'));
+  }
+  function renderGrid(box, list) {
+    box.innerHTML = list.map((w) => {
       const other = lang === 'it' ? w.title.en : w.title.it;
       const pair = w.pair ? `<p class="pair-note">${esc(t('pair', { t: L(byId(w.pair).title) }))}</p>` : '';
       const quote = w.quote ? `<p class="work-quote">${esc(L(w.quote))}</p>` : '';
@@ -190,7 +201,7 @@
           ${other !== L(w.title) ? `<span class="en">${esc(other)}</span>` : ''}
           <p class="work-meta">${esc(L(w.technique))} · ${sizeTxt(w)} · ${t('noFrameShort')}</p>
           ${quote}${pair}
-          <div class="work-price"><b>${eur(w.price)}</b><span>${t('plusShip')}</span></div>
+          <div class="work-price"><b>${eur(w.price)}</b><span>${t('plusShip').replace(/100/, String(shipOf(w)))}</span></div>
           <div class="work-actions">
             <button class="btn btn-ghost" data-open="${w.id}">${t('discover')}</button>
             <button class="btn btn-gold" data-buy="${w.id}" ${w.sold ? 'disabled' : ''}>${w.sold ? t('sold') : t('buy')}</button>
@@ -209,7 +220,7 @@
   let current = null, slides = [], idx = 0, lastFocus = null, swiped = false;
   function buildSlides(w) {
     const s = [{ src: `img/${w.images[0]}`, cap: () => t('capWhole') }];
-    s.push({ src: `img/${w.room}`, cap: () => t('capRoom', { s: `${w.size[0]}×${w.size[1]}` }), room: true });
+    s.push({ src: `img/${w.room}`, cap: () => t('capRoom'), room: true });
     w.images.slice(1).forEach((f, i) => {
       if (/gallery/.test(f)) s.push({ src: `img/${f}`, cap: () => t('capGallery') });
       else s.push({ src: `img/${f}`, cap: () => t('capDetail', { n: i + 1 }) });
@@ -231,11 +242,11 @@
     $('#vSub').textContent = other !== L(w.title) ? other : '';
     $('#vQuote').textContent = w.quote ? L(w.quote) : ''; $('#vQuote').hidden = !w.quote;
     $('#vText').textContent = L(w.text);
-    const rows = [[t('sTech'), L(w.technique)], [t('sSize'), sizeTxt(w)]];
+    const rows = [[t('sTech'), L(w.technique)], [t('sSupport'), w.kind === 'paper' ? t('supPaper') : t('supCanvas')], [t('sSize'), sizeTxt(w)]];
     if (w.year) rows.push([t('sYear'), lang === 'it' ? w.year.split(' · ')[0] : (w.year.split(' · ')[1] || w.year)]);
-    rows.push([t('sFrame'), t('sFrameV')], [t('sShip'), t('sShipV')], [t('sLeave'), t('sLeaveV')]);
+    rows.push([t('sFrame'), t('sFrameV')], [t('sShip'), t('sShipV').replace(/100/, String(shipOf(w)))], [t('sLeave'), t('sLeaveV')]);
     $('#vSpecs').innerHTML = rows.map(([a, b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('');
-    $('#vPrice').innerHTML = `${eur(w.price)}<small>${t('plusShip')}</small>`;
+    $('#vPrice').innerHTML = `${eur(w.price)}<small>${t('plusShip').replace(/100/, String(shipOf(w)))}</small>`;
     $('#vBuy').disabled = !!w.sold; $('#vBuy').textContent = w.sold ? t('sold') : t('buy');
   }
   function show(i) {
@@ -272,7 +283,8 @@
       .z-hint.off{opacity:0}
       .v-zoom{position:absolute;right:18px;bottom:18px;z-index:3;display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid rgba(201,166,90,.6);background:rgba(0,0,0,.6);color:#E3C47E;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}
       .v-zoom svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
-      .v-figure img{cursor:zoom-in}`;
+      .v-figure img{cursor:zoom-in}
+      @media (max-width:980px){.v-zoom{top:calc(12px + env(safe-area-inset-top,0px));left:12px;right:auto;bottom:auto}}`;
     document.head.appendChild(st);
   }
   if (!$('#vZoom')) {
@@ -385,7 +397,7 @@
   $('#tOk').addEventListener('click', () => closeModal('thanks'));
 
   function lines(w) {
-    return `<div class="o-lines"><span>${t('lWork')}</span><span>${eur(w.price)}</span><span>${t('lShip')}</span><span>${eur(SITE.shipping)}</span><span class="tot">${t('lTotal')}</span><span class="tot">${eur(w.price + SITE.shipping)}</span></div>`;
+    return `<div class="o-lines"><span>${t('lWork')}</span><span>${eur(w.price)}</span><span>${t('lShip')}</span><span>${eur(shipOf(w))}</span><span class="tot">${t('lTotal')}</span><span class="tot">${eur(w.price + shipOf(w))}</span></div>`;
   }
   function renderOrderItem(w) {
     $('#oItem').innerHTML = `<img src="img/${w.id}-sm.jpg" alt=""><div><h5>${esc(L(w.title))}</h5><p class="work-meta">${esc(L(w.technique))} · ${sizeTxt(w)} · ${t('noFrameShort')}</p>${lines(w)}</div>`;
@@ -427,8 +439,8 @@
     btn.disabled = true; btn.textContent = t('sending');
     try {
       await fsPost({
-        _subject: `Nuovo ordine ${id} – ${w.title.it} (${w.price + SITE.shipping} €)`, _template: 'table', _captcha: 'false', _replyto: buyer.email,
-        Ordine: id, Opera: `${w.title.it} – ${w.technique.it}, ${sizeTxt(w)}, senza cornice`, Prezzo: `${w.price} €`, Spedizione: `${SITE.shipping} €`, Totale: `${w.price + SITE.shipping} €`,
+        _subject: `Nuovo ordine ${id} – ${w.title.it} (${w.price + shipOf(w)} €)`, _template: 'table', _captcha: 'false', _replyto: buyer.email,
+        Ordine: id, Opera: `${w.title.it} – ${w.technique.it}, ${sizeTxt(w)}, senza cornice`, Prezzo: `${w.price} €`, Spedizione: `${shipOf(w)} €`, Totale: `${w.price + shipOf(w)} €`,
         Nome: buyer.nome, Email: buyer.email, Telefono: buyer.telefono, Indirizzo: buyer.indirizzo, Città: buyer.citta, CAP: buyer.cap, Provincia: buyer.provincia || '-', Paese: buyer.paese, Note: buyer.note || '-', Lingua: lang.toUpperCase(),
         Stato: 'In attesa del pagamento PayPal',
       });
@@ -437,7 +449,7 @@
     const p = new URLSearchParams({
       cmd: '_xclick', business: SITE.paypal, charset: 'utf-8', lc: lang === 'it' ? 'IT' : 'GB',
       item_name: `${w.title.it} – Rein – ${sizeTxt(w)}`, item_number: w.id, invoice: id, custom: id,
-      amount: w.price.toFixed(2), shipping: SITE.shipping.toFixed(2), currency_code: SITE.currency,
+      amount: w.price.toFixed(2), shipping: shipOf(w).toFixed(2), currency_code: SITE.currency,
       no_shipping: '1', no_note: '1', rm: '1',
       return: `${base}?ordine=ok&id=${id}`, cancel_return: `${base}?ordine=annullato&opera=${w.id}`,
     });
@@ -458,7 +470,7 @@
         $('#tTitle').textContent = t('thTitle', { n: b.nome.split(' ')[0] });
         $('#tBody').innerHTML = `<p>${t('thIntro', { t: esc(L(w.title)), id: esc(o.id) })}</p>
           <div class="sum"><span>${esc(L(w.title))} — ${esc(L(w.technique))}, ${sizeTxt(w)}, ${t('noFrameShort').toLowerCase()}</span><span>${eur(w.price)}</span>
-          <span>${t('lShip')}</span><span>${eur(SITE.shipping)}</span><span class="tot">${t('lTotal')}</span><span class="tot">${eur(w.price + SITE.shipping)}</span></div>
+          <span>${t('lShip')}</span><span>${eur(shipOf(w))}</span><span class="tot">${t('lTotal')}</span><span class="tot">${eur(w.price + shipOf(w))}</span></div>
           <p><b>${t('thTo')}:</b> ${esc(b.nome)}, ${esc(b.indirizzo)}, ${esc(b.cap)} ${esc(b.citta)}${b.provincia ? ' (' + esc(b.provincia) + ')' : ''}, ${esc(b.paese)}</p>
           <p>${t('thAfter', { e: esc(b.email) })}</p><p>${t('thQ')}</p><p class="sig">${t('thSig')}</p>`;
         localStorage.removeItem('rein-order');

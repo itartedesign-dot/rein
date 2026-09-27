@@ -92,6 +92,36 @@ const WORKS = [
       en: "A ruby-red crown glowing like embers, a stone island wrapped in ivy, a background of deep greens and blues. “Aurora” is the nocturnal twin of “Where the Wind Ends”: together they form an ideal diptych.",
     },
   },
+  {
+    id: 'marilyn', kind: 'paper',
+    title: { it: 'Marilyn Monroe', en: 'Marilyn Monroe' },
+    series: null,
+    technique: { it: 'Acquerello e matita su carta', en: 'Watercolour and pencil on paper' },
+    size: null, sizeLabel: { it: 'Circa A4 e mezzo', en: 'Approx. 1.5 × A4' },
+    year: '', price: 120, shipping: 100, sold: false,
+    images: ['marilyn.jpg', 'marilyn-d1.jpg', 'marilyn-d2.jpg'],
+    room: 'marilyn-room.jpg',
+    quote: null,
+    text: {
+      it: "Pochi tratti di matita e velature d'acquerello grigio per un'icona senza tempo. Marilyn affiora dal foglio con lo sguardo socchiuso e i riccioli mossi: il segno resta libero, le linee di costruzione restano visibili, come in una pagina del taccuino dell'artista. Un ritratto intimo e firmato, da incorniciare come un piccolo tesoro.",
+      en: "A few pencil lines and grey watercolour washes for a timeless icon. Marilyn emerges from the sheet with half-closed eyes and tousled curls: the line stays free, the construction marks remain visible, like a page from the artist's sketchbook. An intimate, signed portrait, to be framed like a small treasure.",
+    },
+  },
+  {
+    id: 'gitana', kind: 'paper',
+    title: { it: 'La Gitana', en: 'La Gitana' },
+    series: null,
+    technique: { it: 'Acquerello e matita su carta', en: 'Watercolour and pencil on paper' },
+    size: [29.7, 21], sizeLabel: { it: 'A4 · 29,7 × 21 cm', en: 'A4 · 29.7 × 21 cm' },
+    year: '', price: 120, shipping: 100, sold: false,
+    images: ['gitana.jpg', 'gitana-d1.jpg', 'gitana-d2.jpg'],
+    room: 'gitana-room.jpg',
+    quote: null,
+    text: {
+      it: "Un abbraccio che trattiene il respiro: lei, gli occhi chiusi e i capelli ramati; lui, un gesto d'inchiostro scuro che la avvolge. L'acquerello scorre veloce e sicuro, tra trasparenze calde e pennellate nere e decise. Passione e tenerezza fermate in un unico istante, su carta.",
+      en: "An embrace that holds its breath: she, eyes closed and copper hair; he, a gesture of dark ink wrapping around her. The watercolour flows fast and sure, between warm transparencies and bold black strokes. Passion and tenderness caught in a single instant, on paper.",
+    },
+  },
 ];
 
 if (typeof module !== 'undefined') module.exports = { SITE, WORKS };
