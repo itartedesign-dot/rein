@@ -292,3 +292,31 @@ h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.05; }
   .evo-cards { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 74%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; }
   .evo-cards article { scroll-snap-align: center; }
 }
+
+/* ---------- acquerelli su carta ---------- */
+.paper-band {
+  --pb-ink: #221E1A; --pb-muted: rgba(34,30,26,.72); --pb-gold: #8A6A2A;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(ellipse at 90% 100%, rgba(180,160,120,.18), transparent 55%),
+    #ECE5D6;
+  color: var(--pb-ink);
+  border-top: 1px solid rgba(201,166,90,.35); border-bottom: 1px solid rgba(201,166,90,.35);
+}
+.paper-sec .eyebrow { color: var(--pb-gold); }
+.paper-sec h2 { color: var(--pb-ink); }
+.paper-sec .sec-lead { color: var(--pb-muted); }
+.paper-works .work:first-child { grid-column: auto; grid-template-columns: none; gap: 22px; }
+.paper-works .work-media { background: #F7F3EA; border: 1px solid rgba(34,30,26,.08); box-shadow: 0 30px 60px -35px rgba(60,45,20,.45); }
+.paper-works .work-media:hover { border-color: rgba(138,106,42,.45); }
+.paper-works .work-media img { box-shadow: 0 16px 30px -18px rgba(60,45,20,.6); }
+.paper-works .work-media .zoom-hint { color: var(--pb-gold); }
+.paper-works .work-info h3 { color: var(--pb-ink); }
+.paper-works .work-info .en { color: rgba(34,30,26,.5); }
+.paper-works .work-meta { color: var(--pb-muted); }
+.paper-works .work-price b { color: var(--pb-gold); }
+.paper-works .work-price span { color: rgba(34,30,26,.55); }
+.paper-works .btn-ghost { color: var(--pb-ink); border-color: rgba(34,30,26,.35); }
+.paper-works .btn-ghost:hover { border-color: var(--pb-gold); color: var(--pb-gold); }
+.ver { opacity: .6; letter-spacing: .1em; }
+@media (max-width: 1100px) and (min-width: 981px) { .menu { gap: 14px; } .menu a { font-size: .7rem; letter-spacing: .14em; } }
