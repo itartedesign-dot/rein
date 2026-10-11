@@ -11,6 +11,7 @@ Sito ufficiale del pittore **Rein** (Sicilia): galleria e vendita di opere origi
 ## Da fare una volta sola
 - **Moduli (ordini e contatti):** usano il servizio gratuito FormSubmit verso itartedesign@gmail.com. Al primo invio dal nuovo sito arriva un'email di attivazione: clicca il link e da lì in poi ordini e messaggi arrivano direttamente.
 - **PayPal:** i pagamenti vanno a buono.p@alice.it. Per vendere opere è consigliato un conto **PayPal Business** (gratuito). La conferma certa di ogni pagamento arriva da PayPal via email: controllala sempre prima di spedire.
+- **Statistiche delle visite (GoatCounter):** `js/stats.js` conta le visite senza cookie. Il codice dell'account è nella riga `CODICE` (ora `resonance`): crea su goatcounter.com un sito con lo stesso codice, poi i numeri si leggono su `https://resonance.goatcounter.com`. Lasciando `CODICE` vuoto le statistiche sono spente; non conta in locale né chi ha attivo "Non tenere traccia".
 
 ## Come funziona l'acquisto
 1. Il cliente preme **Acquista** sotto l'opera (o nella scheda dell'opera).
