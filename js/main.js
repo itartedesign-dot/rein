@@ -7,7 +7,7 @@
   /* ---------- testi ---------- */
   const T = {
     it: {
-      navEvo: "L'evoluzione",
+      navEvo: "L'evoluzione", navArticle: 'Pittura unica',
       evoEyebrow: 'Dietro le quinte', evoTitle: "L'evoluzione di «Confidenze di Maggio»",
       evoLead: "Dalla prima linea a matita all'ultima pennellata: sei fasi per scoprire come nasce un'opera.",
       evoNote: "Le fasi sono ricostruite con Paintstep, l'app gratuita di Rein, partendo dall'opera finita.", evoLink: 'Scopri Paintstep →',
@@ -78,7 +78,7 @@
       noFrameShort: 'Senza cornice',
     },
     en: {
-      navEvo: 'The evolution',
+      navEvo: 'The evolution', navArticle: 'One-of-a-kind painting',
       evoEyebrow: 'Behind the scenes', evoTitle: 'The evolution of “May Confidences”',
       evoLead: 'From the first pencil line to the last brushstroke: six phases to discover how an artwork is born.',
       evoNote: "The phases are reconstructed with Paintstep, Rein's free app, starting from the finished work.", evoLink: 'Discover Paintstep →',
